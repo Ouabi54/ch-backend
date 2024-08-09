@@ -32,7 +32,7 @@ class AuthController {
     try {
       const userData: User = req.user;
       await this.authService.logout(userData);
-      res.setHeader('Set-Cookie', ['Authorization=; SameSite=None; Secure; path=/; HttpOnly; Max-age=0']);
+      res.setHeader('Set-Cookie', ['Authorization=; SameSite=Lax; Secure; path=/; HttpOnly; Max-age=0']);
       res.status(200).json({ success: true });
     } catch (error) {
       next(error);
