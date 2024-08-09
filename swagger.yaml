@@ -1,0 +1,182 @@
+paths:
+  /auth/login:
+    post:
+      tags:
+      - auth
+      summary: Login
+      parameters:
+        - in: body
+          name: credentials
+          description: The user credentials.
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+  /auth/signup:
+    post:
+      tags:
+      - auth
+      summary: Signup
+      parameters:
+        - in: body
+          name: credentials
+          description: The user credentials.
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+  /auth/logout:
+    post:
+      tags:
+      - auth
+      summary: Logout
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+  /friends:
+    get:
+      tags:
+      - friends
+      summary: Get All Friends
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+  /friends/remove:
+    post:
+      tags:
+      - friends
+      summary: Remove A Friend
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+
+  /requests:
+    get:
+      tags:
+      - requests
+      summary: Get All Friend Requests
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+  /requests/send:
+    post:
+      tags:
+      - requests
+      summary: Send A Friend Request
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+  /requests/cancel:
+    post:
+      tags:
+      - requests
+      summary: Cancel A Friend Request
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+  /requests/accept:
+    post:
+      tags:
+      - requests
+      summary: Accept A Friend Request
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+  /requests/reject:
+    post:
+      tags:
+      - requests
+      summary: Reject A Friend Request
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+
+# [GET] users
+  /users:
+    get:
+      tags:
+      - users
+      summary: Get All Users
+      security:
+        - BasicAuth: []
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+# definitions
+definitions:
+  users:
+    type: object
+    required:
+        - email
+        - password
+    properties:
+      email:
+        type: string
+        description: user Email
+      password:
+        type: string
+        description: user Password
+
+schemes:
+ - https
+ - http
