@@ -59,7 +59,6 @@ paths:
           description: 'OK'
         500:
           description: 'Server Error'
-
   /friends:
     get:
       tags:
@@ -77,6 +76,17 @@ paths:
       tags:
       - friends
       summary: Remove A Friend
+      parameters:
+        - in: body
+          name: Target
+          description: Id of the target.
+          schema:
+            type: object
+            required:
+              - targetId
+            properties:
+              targetId:
+                type: string
       security:
         - BasicAuth: []
       responses:
@@ -103,6 +113,17 @@ paths:
       tags:
       - requests
       summary: Send A Friend Request
+      parameters:
+        - in: body
+          name: Target
+          description: Id of the target.
+          schema:
+            type: object
+            required:
+              - targetId
+            properties:
+              targetId:
+                type: string
       security:
         - BasicAuth: []
       responses:
@@ -115,6 +136,17 @@ paths:
       tags:
       - requests
       summary: Cancel A Friend Request
+      parameters:
+        - in: body
+          name: Request
+          description: Id of the request.
+          schema:
+            type: object
+            required:
+              - requestId
+            properties:
+              requestId:
+                type: string
       security:
         - BasicAuth: []
       responses:
@@ -127,6 +159,17 @@ paths:
       tags:
       - requests
       summary: Accept A Friend Request
+      parameters:
+        - in: body
+          name: Request
+          description: Id of the request.
+          schema:
+            type: object
+            required:
+              - requestId
+            properties:
+              requestId:
+                type: string
       security:
         - BasicAuth: []
       responses:
@@ -139,6 +182,17 @@ paths:
       tags:
       - requests
       summary: Reject A Friend Request
+      parameters:
+        - in: body
+          name: Request
+          description: Id of the request.
+          schema:
+            type: object
+            required:
+              - requestId
+            properties:
+              requestId:
+                type: string
       security:
         - BasicAuth: []
       responses:
