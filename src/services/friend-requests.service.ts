@@ -58,6 +58,7 @@ class FriendshipRequestService {
 
   // Cancel a friend request sent to a user
   public async cancelRequest(userData: User, requestData: FriendRequestActionDto): Promise<void> {
+    const io = app.getSocketIo();
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const request = await this.friendRequests.findOne({ _id: requestData.requestId });
@@ -73,6 +74,8 @@ class FriendshipRequestService {
 
     request.status = FriendRequestStatus.CANCELED;
     await request.save();
+    io.emit(request.target, { email: userData.email, type: SocketEventType.CANCEL_FRIEND_REQUEST }); // We emit an event to the target using socket io
+
   }
 
   // Accept a friend request
@@ -106,25 +109,32 @@ class FriendshipRequestService {
 
   // Reject a friend request
   public async rejectRequest(userData: User, requestData: FriendRequestActionDto): Promise<void> {
+    const io = app.getSocketIo();
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
-    const request: any = await this.friendRequests.findOne({ _id: requestData.requestId });
+    const request: any = await this.friendRequests
+    .findOne({ _id: requestData.requestId })
+    .populate('sender', '-password')
+    .populate('target', '-password')
+    .exec();
 
     // The request doesn't exist
     if (!request) throw new HttpException(400, 'Friend request not found');
 
     // The user is not the target
-    if (request.target.toString() != userData._id.toString()) throw new HttpException(400, 'Not authorized to reject this request');
+    if (request.target._id.toString() != userData._id.toString()) throw new HttpException(400, 'Not authorized to reject this request');
 
     // The request is not PENDING
     if (request.status != FriendRequestStatus.PENDING) throw new HttpException(400, 'Can only reject a pending request');
 
     request.status = FriendRequestStatus.REJECTED;
     await request.save();
+    io.emit(request.sender._id, { email: request.target.email, type: SocketEventType.REJECT_FRIEND_REQUEST }); // We emit an event to the sender using socket io
   }
 
   // Remove a friend
   public async removeFriend(userData: User, requestData: FriendRequestDto): Promise<void> {
+    const io = app.getSocketIo();
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     // If the target user is not in the list of friend
@@ -133,6 +143,7 @@ class FriendshipRequestService {
     // We remove the friend for the target and the sender
     await this.users.findByIdAndUpdate(requestData.targetId, { $pull: { friends: userData._id } }, { new: false, useFindAndModify: false });
     await this.users.findByIdAndUpdate(userData._id, { $pull: { friends: requestData.targetId } }, { new: false, useFindAndModify: false });
+    io.emit(requestData.targetId, { email: userData.email, type: SocketEventType.DELETE_FRIEND }); // We emit an event to the sender using socket io
   }
 }
 
