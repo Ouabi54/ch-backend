@@ -102,12 +102,6 @@ class App {
     this.io.on('connection', socket => {
       console.log('A user connected:', socket.id);
 
-      // Example event handler
-      socket.on('chat message', msg => {
-        console.log('Message received:', msg);
-        this.io.emit('chat message', msg);
-      });
-
       socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
       });
@@ -141,7 +135,7 @@ class App {
   }
 }
 
-/* Global error handlers */
+/* Global error handlers 
 process.on('uncaughtException', error => {
   logger.error('Uncaught Exception:', error);
   process.exit(1);
@@ -150,6 +144,6 @@ process.on('uncaughtException', error => {
 process.on('unhandledRejection', (reason, promise) => {
   logger.error('Unhandled Rejection:', reason);
   process.exit(1);
-});
+}); */
 
 export default App;
